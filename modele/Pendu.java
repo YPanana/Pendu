@@ -47,6 +47,7 @@ public class Pendu {
 			
 			if (lettreCorrecte(lettre)) {
 				System.out.println("Bravo ! Le mot cache contient bien la lettre " + lettre + " !");
+				motTrouve();
 			}
 			else {
 				System.out.println("Aie ! La lettre " + lettre + " n'est pas contenue dans le mot secret !");
@@ -67,6 +68,7 @@ public class Pendu {
 				j.setScore(score);
 				classement.ajouterJoueur(j);
 				System.out.println(this.classement);
+				classement.sauverClassement();
 			}
 		}
 		else {
@@ -132,6 +134,21 @@ public class Pendu {
 			}
 		}
 		return trouve;
+	}
+	
+	private void motTrouve() {
+		int nbLettresMot = this.lettresTrouvees.length,
+			nbLettresTrouvees = 0;
+		
+		for (int i = 0 ; i < nbLettresMot ; i++) {
+			if (this.lettresTrouvees[i] == 1) {
+				nbLettresTrouvees++;
+			}
+		}
+		
+		if (nbLettresTrouvees == nbLettresMot) {
+			this.trouve = true;
+		}
 	}
 	
 	private int calculScore(int erreurs) {
