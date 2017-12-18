@@ -15,7 +15,7 @@ public class Pendu {
 	private String motSecret = "";
 	private int[] lettresTrouvees;
 	private boolean trouve = false;
-	private int nbCoups = 0;
+	private int nbErreurs = 0;
 	private Classement classement = new Classement();
 
 	public void nouvellePartie() {
@@ -28,35 +28,48 @@ public class Pendu {
 		System.out.println("Choix du mot cache effectue ! On commence !");
 
 		//Boucle de partie
-		while (!trouve && nbCoups < 7) {
+		while (!trouve && nbErreurs < 7) {
 
 			/* TO DO :
 			 * 1) Afficher le mot mystere en remplacant tous les caracteres par '*'
 			 * 2) Inviter le joueur a entrer une lettre
 			 * 3) Verifier si elle est presente dans le mot
-			 * 4a) Si oui, reveler sa position (incrementer compteur)
-			 * 4b) Si non, commencer dessin du pendu (incrementer aussi)
-			 * 5) Si le joueur trouve le mot (nbCoups < 7), on calcule son score.
+			 * 4a) Si oui, reveler sa position
+			 * 4b) Si non, commencer dessin du pendu (incrementer compteur d'erreur)
+			 * 5) Si le joueur trouve le mot (nbErreurs < 7), on calcule son score.
 			 * 6) Si il est dans le top 10, on lui demande un pseudo et on enregistre son score
 			 * 7) Sinon au revient au menu principal
 			 */
 			afficherMotSecret();
-			System.out.println("Nb de coups restants : " + (7 - this.nbCoups));
+			System.out.println("Nombre d'erreurs : " + this.nbErreurs + "/7");
 			System.out.println("Veuillez entrer une lettre : ");
-			lettre = sc.nextLine().charAt(0);
+			lettre = sc.nextLine().toUpperCase().charAt(0);
 			
 			if (lettreCorrecte(lettre)) {
 				System.out.println("Bravo ! Le mot cache contient bien la lettre " + lettre + " !");
-				nbCoups++;
+				motTrouve();
 			}
 			else {
 				System.out.println("Aie ! La lettre " + lettre + " n'est pas contenue dans le mot secret !");
-				nbCoups++;
+				nbErreurs++;
 			}
 		}
 		
 		if (trouve) {
-			System.out.println("Bravo vous avez trouve le mot cache  en " + (7 - this.nbCoups) + " coups ! Il s'agissait bien du mot " + this.motSecret.toUpperCase());
+			System.out.println("Bravo vous avez trouve le mot cache en faisant " + nbErreurs + " erreurs ! Il s'agissait bien du mot " + this.motSecret.toUpperCase());
+			int score = calculScore(this.nbErreurs);
+			
+			if (classement.checkTop10(score)) {
+				System.out.println("--Nouveau top score !");
+				System.out.println("--Veuillez entrer votre nom : ");
+				String nomJoueur = sc.nextLine();
+				Joueur j = new Joueur();
+				j.setNomJoueur(nomJoueur);
+				j.setScore(score);
+				classement.ajouterJoueur(j);
+				System.out.println(this.classement);
+				classement.sauverClassement();
+			}
 		}
 		else {
 			System.out.println("Dommage vous n'avez pas reussi a trouver le mot cache. Il s'agissait du mot " + this.motSecret.toUpperCase());
@@ -121,6 +134,51 @@ public class Pendu {
 			}
 		}
 		return trouve;
+	}
+	
+	private void motTrouve() {
+		int nbLettresMot = this.lettresTrouvees.length,
+			nbLettresTrouvees = 0;
+		
+		for (int i = 0 ; i < nbLettresMot ; i++) {
+			if (this.lettresTrouvees[i] == 1) {
+				nbLettresTrouvees++;
+			}
+		}
+		
+		if (nbLettresTrouvees == nbLettresMot) {
+			this.trouve = true;
+		}
+	}
+	
+	private int calculScore(int erreurs) {
+		int score = 0;
+		
+		switch(erreurs) {
+		
+		case 0 :
+			score = 100;
+			break;
+		case 1 :
+			score = 50;
+			break;
+		case 2 :
+			score = 35;
+			break;
+		case 3 :
+			score = 25;
+			break;
+		case 4 :
+			score = 15;
+			break;
+		case 5 :
+			score = 10;
+			break;
+		case 6 :
+			score = 5;
+			break;
+		}
+		return score;
 	}
 
 }
