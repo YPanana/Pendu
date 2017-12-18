@@ -52,8 +52,14 @@ public class Classement implements Serializable {
 	
 	public String toString() {
 		String str = "--Classement--\n";
-		for (int i = 0 ; i < 10 ; i++) {
-			str += i + "." + this.tableClassement.toString() + "\n";
+		int tailleTableau = this.tableClassement.size();
+		for (int i = 0 ; i < tailleTableau ; i++) {
+			str += i+1 + ". " + this.tableClassement.get(i).toString() + "\n";
+		}
+		if (tailleTableau < 10) {
+			for (int i = tailleTableau ; i < 10 ; i++) {
+				str += i+1 + ". ----Vide----\n";
+			}
 		}
 		str += "--------------\n";
 		return str;
