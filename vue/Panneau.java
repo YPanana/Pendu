@@ -16,22 +16,26 @@ import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import com.oc.modele.Pendu;
+
 public class Panneau extends JPanel {
 
-	private char[] tableAlphabet;
-	private ArrayList<JButton> boutonsAlphabet = new ArrayList<JButton>();
 	private String ecran = "ACCUEIL";
+	private Pendu pendu = new Pendu();
+	private int nbMotsTrouves = 0, score = 0;
 
 	public void paintComponent(Graphics g) {
 		g.setColor(Color.white);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
-
+		
 		if (this.ecran.equals("ACCUEIL"))
 			ecranAccueil(g);
 		else if (this.ecran.equals("REGLES"))
 			ecranRegles(g);
 		else if (this.ecran.equals("INFOS"))
 			ecranInfos(g);
+		else if (this.ecran.equals("JEU"))
+			ecranJeu(g);
 	}
 	
 	public void setEcran(String ecran) {
@@ -39,6 +43,7 @@ public class Panneau extends JPanel {
 	}
 
 	private void ecranAccueil(Graphics g) {
+		
 		g.setFont(new Font("Tahoma", Font.BOLD, 20));
 		g.setColor(Color.black);
 		g.drawString("Bienvenue dans le jeu du Pendu !", 175, 50);
@@ -63,6 +68,7 @@ public class Panneau extends JPanel {
 	}
 
 	private void ecranRegles(Graphics g) {
+		
 		g.setFont(new Font("Tahoma", Font.BOLD, 20));
 		g.setColor(Color.black);
 		g.drawString("Le jeu du Pendu :", 250, 50);
@@ -113,5 +119,13 @@ public class Panneau extends JPanel {
 		}
 		
 		g.drawString("Copyright 2017", 250, 600);
+	}
+	
+	private void ecranJeu(Graphics g) {
+		g.setFont(new Font("Tahoma", Font.BOLD, 14));
+		g.setColor(Color.black);
+		
+		g.drawString("Nombre de mots trouves : "+nbMotsTrouves, 50, 50);
+		g.drawString("Votre score actuel est de  : "+score, 50, 70);
 	}
 }
